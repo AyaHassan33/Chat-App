@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "606236474992",
+    "project_id": "chat-app-route-f38eb",
+    "storage_bucket": "chat-app-route-f38eb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606236474992:android:86eba7ef597e263ba1beb5",
+        "android_client_info": {
+          "package_name": "com.example.chatappbycompose"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCB3GLlxzGAGlenH0GI5iCqF0LtNDFJ4s4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
