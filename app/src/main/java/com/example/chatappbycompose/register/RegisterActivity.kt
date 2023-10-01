@@ -59,7 +59,7 @@ import com.example.chatappbycompose.addRoom.Navigator
 class RegisterActivity : ComponentActivity(),Navigator {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
+        setContent{
             ChatAppByComposeTheme {
                 // A surface container using the 'background' color from the theme
                 RegisterContent(navigator = this)
