@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +25,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -39,6 +41,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -51,23 +54,57 @@ import androidx.compose.ui.window.Dialog
 import com.example.chatappbycompose.R
 import com.example.chatappbycompose.register.ui.theme.ChatAppByComposeTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.chatappbycompose.addRoom.Navigator
 
-class RegisterActivity : ComponentActivity() {
+class RegisterActivity : ComponentActivity(),Navigator {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             ChatAppByComposeTheme {
                 // A surface container using the 'background' color from the theme
-                RegisterContent()
+                RegisterContent(navigator = this)
             }
         }
+    }
+
+    override fun navigatorUp() {
+        finish()
     }
 }
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterContent(viewModel: RegisterViewModel = viewModel()) {
-    Scaffold(modifier = Modifier.fillMaxSize()) {
+fun RegisterContent(viewModel: RegisterViewModel = viewModel(),navigator: Navigator) {
+    viewModel.navigator= navigator
+    Scaffold(modifier = Modifier.fillMaxSize(),
+        topBar = {
+      /*  Text(text = "Create Account", modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 50.dp),
+            style = TextStyle(color = colorResource(id = R.color.white),
+                textAlign = TextAlign.Center , fontSize = 20.sp)
+
+        )*/
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 15.dp),
+                verticalAlignment = Alignment.CenterVertically)
+            {
+                IconButton(onClick = { viewModel.navigatorUp() }) {
+                    Icon(painter = painterResource(id = R.drawable.ic_back), contentDescription ="icon_back", tint = colorResource(
+                        id = R.color.white))
+
+                }
+                Text(
+                    text = stringResource(R.string.create_account),
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    fontSize = 21.sp,
+                    style = TextStyle(color = colorResource(id = R.color.white))
+                )
+            }
+
+    }) {
         Column(modifier = Modifier
             .fillMaxSize()
             .paint(
@@ -201,7 +238,12 @@ fun ChatAlertDialogPreview() {
 @Composable
 fun GreetingPreview2() {
     ChatAppByComposeTheme {
-        RegisterContent()
+        RegisterContent(navigator = object :Navigator{
+            override fun navigatorUp() {
+
+            }
+
+        })
 
     }
 }

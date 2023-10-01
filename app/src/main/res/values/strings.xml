@@ -2,4 +2,11 @@
     <string name="app_name">ChatAppByCompose</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_add_room">AddRoomActivity</string>
+    <string name="home">Home</string>
+    <string name="chat_app">Chat App</string>
+    <string name="create_new_room">Create New Room</string>
+    <string name="room_title">Room Title</string>
+    <string name="room_desc">Room Description</string>
+    <string name="create_account">Create Account</string>
 </resources>

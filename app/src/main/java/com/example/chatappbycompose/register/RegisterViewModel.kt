@@ -2,6 +2,7 @@ package com.example.chatappbycompose.register
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.chatappbycompose.addRoom.Navigator
 import com.example.chatappbycompose.database.addUserToFirestoreDB
 import com.example.chatappbycompose.model.AppUserModel
 import com.google.firebase.auth.ktx.auth
@@ -17,6 +18,11 @@ class RegisterViewModel :ViewModel() {
     val showLoading = mutableStateOf(false)
     val message= mutableStateOf("")
     val auth = Firebase.auth
+    var navigator:Navigator?=null
+
+    fun navigatorUp(){
+        navigator?.navigatorUp()
+    }
 
     fun validateFields(): Boolean{
         if (firstNameState.value.isEmpty()||firstNameState.value.isBlank()){
