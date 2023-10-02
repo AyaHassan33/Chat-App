@@ -122,7 +122,7 @@ fun RegisterContent(viewModel: RegisterViewModel = viewModel(),navigator: Naviga
 
             }
             LoadingDialog()
-            ChatAlertDialog()
+            ChatAlertDialog(navigator=navigator)
         }
 
     }
@@ -205,13 +205,15 @@ fun LoadingDialog(viewModel: RegisterViewModel = viewModel()) {
 }
 
 @Composable
-fun ChatAlertDialog(viewModel: RegisterViewModel = viewModel()) {
+fun ChatAlertDialog(viewModel: RegisterViewModel = viewModel(),navigator: Navigator) {
+    viewModel.navigator=navigator
     if(viewModel.message.value .isNotEmpty())
         AlertDialog(onDismissRequest = {
             viewModel.message.value = ""
         }, confirmButton = {
             TextButton(onClick = {
                 viewModel.message.value = ""
+                viewModel.navigatorUp()
             })
             {
                 Text(text = "OK")

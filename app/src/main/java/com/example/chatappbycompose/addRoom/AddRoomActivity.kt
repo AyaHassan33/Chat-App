@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,12 +15,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -28,6 +32,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -44,11 +49,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.example.chatappbycompose.addRoom.ui.theme.ChatAppByComposeTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.chatappbycompose.R
 import com.example.chatappbycompose.login.ChatAuthTextField
-import androidx.lifecycle.viewmodel.compose.viewModel
+
+
 
 class AddRoomActivity : ComponentActivity(),Navigator{
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,14 +108,14 @@ fun AddRoomContent(viewModel: AddRoomViewModel = viewModel(),navigator: Navigato
             Spacer(modifier = Modifier.fillMaxHeight(0.10f))
             AddRoomCard(modifier = Modifier
                 .fillMaxWidth(0.85f)
-                .align(Alignment.CenterHorizontally))
+                .align(Alignment.CenterHorizontally),navigator=navigator)
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddRoomCard(modifier: Modifier = Modifier,viewModel: AddRoomViewModel= viewModel()) {
+fun AddRoomCard(modifier: Modifier = Modifier,viewModel: AddRoomViewModel= viewModel(),navigator: Navigator) {
     Card(
         colors = CardDefaults.cardColors(colorResource(id = R.color.white)),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
@@ -186,7 +193,7 @@ fun AddRoomCard(modifier: Modifier = Modifier,viewModel: AddRoomViewModel= viewM
         Spacer(modifier = Modifier.height(30.dp))
         Button(
             onClick = {
-
+                      viewModel.addRoomToFireStore()
             },
             modifier = Modifier
                 .fillMaxWidth(0.77f)
@@ -202,8 +209,55 @@ fun AddRoomCard(modifier: Modifier = Modifier,viewModel: AddRoomViewModel= viewM
         Spacer(modifier = Modifier.fillMaxHeight(0.44f))
 
     }
-    
+    LoadingDialog()
+    ChatAlertDialog(navigator = navigator)
+
 }
+@Composable
+fun LoadingDialog(viewModel: AddRoomViewModel = viewModel()) {
+    if(viewModel.showLoading.value)
+        Dialog(onDismissRequest = {  }) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .size(100.dp)
+                    .background(
+                        color = colorResource(id = R.color.white),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .width(35.dp)
+                        .height(35.dp),
+                    color = colorResource(id = R.color.blue))
+
+            }
+        }
+}
+@Composable
+fun ChatAlertDialog(viewModel: AddRoomViewModel = viewModel(),navigator: Navigator) {
+    viewModel.navigator=navigator
+    if(viewModel.message.value .isNotEmpty())
+        AlertDialog(onDismissRequest = {
+            viewModel.message.value = ""
+        }, confirmButton = {
+            TextButton(onClick = {
+                viewModel.message.value = ""
+                viewModel.navigatorUp()
+            })
+            {
+                Text(text = "OK")
+            }
+
+        }, text = {
+            Text(text = viewModel.message.value)
+        }
+
+
+        )
+}
+
 
 
 @Preview(showBackground = true, showSystemUi = true)
