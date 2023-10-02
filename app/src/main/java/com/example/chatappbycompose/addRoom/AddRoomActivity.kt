@@ -5,12 +5,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,16 +20,20 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -124,12 +130,60 @@ fun AddRoomCard(modifier: Modifier = Modifier,viewModel: AddRoomViewModel= viewM
             contentScale = ContentScale.FillWidth
         )
         ChatAuthTextField(state =viewModel.titleState , label = stringResource(id = R.string.room_title) , errorState =viewModel.titleErrorState)
-        ExposedDropdownMenuBox(expanded = viewModel.isExpanded.value, onExpandedChange = {
+        ExposedDropdownMenuBox(
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            expanded = viewModel.isExpanded.value, onExpandedChange = {
             viewModel.isExpanded.value = !viewModel.isExpanded.value
         }) {
+            TextField(
+                modifier = Modifier
+                    .menuAnchor()
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 8.dp)
+                    .fillMaxWidth(),
+                readOnly = true,
+                value = viewModel.selectedItem.value.name ?:"" ,
+                onValueChange ={} ,
+                label = { Text("Room Category") },
+                leadingIcon = {
+                              Image(painter = painterResource(id = viewModel.selectedItem.value.imageId!!), contentDescription = "",
+                                  modifier= Modifier
+                                      .width(50.dp)
+                                      .height(50.dp)
+                                      .padding(end = 8.dp))
+                },
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = viewModel.isExpanded.value) },
+                colors = ExposedDropdownMenuDefaults.textFieldColors(containerColor = Color.Transparent),
+
+                )
+            ExposedDropdownMenu(
+                expanded = viewModel.isExpanded.value,
+                onDismissRequest = { viewModel.isExpanded.value = false }) {
+                viewModel.categoriesList.forEach {category ->
+                    DropdownMenuItem(text = {
+                        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.background(
+                            Color.Transparent
+                        )){
+                            Image(painter = painterResource(id = category.imageId!!),
+                                modifier= Modifier
+                                    .width(50.dp)
+                                    .height(50.dp)
+                                    .padding(end = 8.dp),
+                                contentDescription ="Room Categeory Image" )
+                            //Spacer(modifier = Modifier.width(16.dp))
+                            Text(text = category.name ?: "")
+
+                    }}, onClick = {
+                        viewModel.selectedItem.value = category
+                        viewModel.isExpanded.value=false
+                    })
+
+                }
+            }
             
         }
         ChatAuthTextField(state =viewModel.descriptionState , label = stringResource(id = R.string.room_desc) , errorState =viewModel.descriptionErrorState )
+        Spacer(modifier = Modifier.height(30.dp))
         Button(
             onClick = {
 
@@ -139,12 +193,13 @@ fun AddRoomCard(modifier: Modifier = Modifier,viewModel: AddRoomViewModel= viewM
                 .align(Alignment.CenterHorizontally),
             colors = ButtonDefaults.buttonColors(containerColor = colorResource (id = R.color.blue), contentColor = colorResource(
                 id = R.color.white
-            )),
+            )), shape = RoundedCornerShape(25.dp)
         )
         {
-            Text(text = "Create")
+            Text(text = "Create", style = TextStyle(fontSize = 18.sp),modifier=Modifier.padding(7.dp))
 
         }
+        Spacer(modifier = Modifier.fillMaxHeight(0.44f))
 
     }
     
