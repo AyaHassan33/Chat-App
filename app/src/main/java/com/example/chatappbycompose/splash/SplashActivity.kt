@@ -18,30 +18,47 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.chatappbycompose.R
+import com.example.chatappbycompose.home.HomeActivity
 import com.example.chatappbycompose.login.LoginActivity
-import com.example.chatappbycompose.register.RegisterActivity
 import com.example.chatappbycompose.ui.theme.ChatAppByComposeTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
 
-class MainActivity : ComponentActivity() {
+class SplashActivity : ComponentActivity(),Navigator{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             ChatAppByComposeTheme {
                 // A surface container using the 'background' color from the theme
-                Handler(Looper.getMainLooper()).postDelayed({
-                               val intent =Intent(this@MainActivity,LoginActivity::class.java)
+               /* Handler(Looper.getMainLooper()).postDelayed({
+                               val intent =Intent(this@SplashActivity,LoginActivity::class.java)
                     startActivity(intent)
                     finish()
-                },2500)
-                SplashContent()
+                },2500)*/
+                SplashContent(navigator = this@SplashActivity)
 
             }
         }
     }
+
+    override fun navigateToHomeScreen() {
+        val intent = Intent(this@SplashActivity, HomeActivity::class.java)
+        startActivity(intent)
+        finish()
+
+    }
+
+    override fun navigateToLoginScreen() {
+
+        val intent = Intent(this@SplashActivity, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
 }
 
 @Composable
-fun SplashContent() {
+fun SplashContent(viewModel :SplashViewModel = viewModel(), navigator: Navigator) {
+    viewModel.navigator=navigator
+    viewModel.navigate()
     ConstraintLayout(modifier = Modifier
         .fillMaxSize()
         .background(Color.White)) {
@@ -77,7 +94,16 @@ fun SplashContent() {
 @Composable
 fun GreetingPreview() {
     ChatAppByComposeTheme {
-        SplashContent()
+        SplashContent(navigator = object :Navigator{
+            override fun navigateToHomeScreen() {
+
+            }
+
+            override fun navigateToLoginScreen() {
+
+            }
+
+        })
 
     }
 }

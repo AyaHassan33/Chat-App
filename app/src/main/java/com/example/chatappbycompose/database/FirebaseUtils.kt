@@ -1,11 +1,15 @@
 package com.example.chatappbycompose.database
 
 import com.example.chatappbycompose.model.AppUserModel
+import com.example.chatappbycompose.model.Message
 import com.example.chatappbycompose.model.Room
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -44,5 +48,41 @@ fun addRoomToFireStoreDB(
         .set(room)
         .addOnSuccessListener(onSuccessListener)
         .addOnFailureListener(onFailureListener)
+
+}
+fun getRoomsFromFirestoreDB(
+    onSuccessListener: OnSuccessListener<QuerySnapshot>,
+    onFailureListener: OnFailureListener
+) {
+    getCollectionRef(Room.COLLECTION_NAME).get()
+        .addOnSuccessListener(onSuccessListener)
+        .addOnFailureListener(onFailureListener)
+}
+
+fun getMessagesRef(roomId: String): CollectionReference {
+    val roomCollectionRef = getCollectionRef(Room.COLLECTION_NAME)
+    val roomDoc = roomCollectionRef.document(roomId)
+    return roomDoc.collection(Message.COLLECTION_NAME)
+
+}
+
+fun addMessageToFirestoreDB(
+    message:Message,
+    roomId:String,
+    onSuccessListener: OnSuccessListener<Void>,
+    onFailureListener: OnFailureListener)
+{
+    val messageCollection = getMessagesRef(roomId)
+    val messageDoc =messageCollection.document()
+    message.id=messageDoc.id
+    messageDoc.set(message).addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener)
+
+}
+
+fun getMessagesFromFirestoreDB(roomId: String,listener :EventListener<QuerySnapshot>) {
+    val messageCollection = getMessagesRef(roomId = roomId)
+    messageCollection
+        .orderBy("dateTime", Query.Direction.DESCENDING)
+        .addSnapshotListener(listener)
 
 }

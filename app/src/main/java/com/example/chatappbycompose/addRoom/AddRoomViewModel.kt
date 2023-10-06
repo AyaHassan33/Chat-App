@@ -54,4 +54,5 @@ class AddRoomViewModel : ViewModel(){
     fun navigatorUp(){
         navigator?.navigatorUp()
     }
+
 }

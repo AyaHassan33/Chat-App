@@ -15,6 +15,11 @@
         android:theme="@style/Theme.ChatAppByCompose"
         tools:targetApi="31">
         <activity
+            android:name=".chat.ChatActivity"
+            android:exported="false"
+            android:label="@string/title_activity_chat"
+            android:theme="@style/Theme.ChatAppByCompose" />
+        <activity
             android:name=".addRoom.AddRoomActivity"
             android:exported="false"
             android:label="@string/title_activity_add_room"
@@ -33,7 +38,7 @@
             android:name=".login.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".splash.MainActivity"
+            android:name=".splash.SplashActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.ChatAppByCompose">

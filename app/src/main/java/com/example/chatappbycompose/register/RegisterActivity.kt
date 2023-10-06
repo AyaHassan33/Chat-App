@@ -1,6 +1,7 @@
 package com.example.chatappbycompose.register
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -54,7 +55,8 @@ import androidx.compose.ui.window.Dialog
 import com.example.chatappbycompose.R
 import com.example.chatappbycompose.register.ui.theme.ChatAppByComposeTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.chatappbycompose.addRoom.Navigator
+import com.example.chatappbycompose.home.HomeActivity
+import com.example.chatappbycompose.register.Navigator
 
 class RegisterActivity : ComponentActivity(),Navigator {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,9 +69,16 @@ class RegisterActivity : ComponentActivity(),Navigator {
         }
     }
 
-    override fun navigatorUp() {
+    override fun navigateToHome() {
+        val intent = Intent(this@RegisterActivity,HomeActivity::class.java)
+        startActivity(intent)
+    }
+
+    override fun navigateUp() {
         finish()
     }
+
+
 }
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -90,7 +99,7 @@ fun RegisterContent(viewModel: RegisterViewModel = viewModel(),navigator: Naviga
                 .padding(top = 15.dp),
                 verticalAlignment = Alignment.CenterVertically)
             {
-                IconButton(onClick = { viewModel.navigatorUp() }) {
+                IconButton(onClick = { viewModel.navigateUp() }) {
                     Icon(painter = painterResource(id = R.drawable.ic_back), contentDescription ="icon_back", tint = colorResource(
                         id = R.color.white))
 
@@ -205,7 +214,7 @@ fun LoadingDialog(viewModel: RegisterViewModel = viewModel()) {
 }
 
 @Composable
-fun ChatAlertDialog(viewModel: RegisterViewModel = viewModel(),navigator: Navigator) {
+fun ChatAlertDialog(viewModel: RegisterViewModel = viewModel(),navigator: Navigator ) {
     viewModel.navigator=navigator
     if(viewModel.message.value .isNotEmpty())
         AlertDialog(onDismissRequest = {
@@ -213,7 +222,7 @@ fun ChatAlertDialog(viewModel: RegisterViewModel = viewModel(),navigator: Naviga
         }, confirmButton = {
             TextButton(onClick = {
                 viewModel.message.value = ""
-                viewModel.navigatorUp()
+                viewModel.navigateToHome()
             })
             {
                 Text(text = "OK")
@@ -241,7 +250,11 @@ fun ChatAlertDialogPreview() {
 fun GreetingPreview2() {
     ChatAppByComposeTheme {
         RegisterContent(navigator = object :Navigator{
-            override fun navigatorUp() {
+            override fun navigateToHome() {
+
+            }
+
+            override fun navigateUp() {
 
             }
 

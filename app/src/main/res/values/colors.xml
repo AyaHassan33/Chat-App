@@ -11,4 +11,5 @@
     <color name="blue">#3598DB</color>
     <color name="dark_gray">#505050</color>
     <color name="black2">#383838</color>
+    <color name="receive_color">#F8F8F8</color>
 </resources>
